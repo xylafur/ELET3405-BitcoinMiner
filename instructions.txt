@@ -1,0 +1,100 @@
+Mining a Block
+    - collect new transactions into a block
+    - run the block through D SHA-256
+        - I think maybe you just hash the header?
+
+
+        - this is the "Proof of Work"
+            - a piece of data that is time consuming to produce, but easy to verify
+            - bitcoin uses 'hashcash'
+                - uses has function as a building block
+
+    - if output starts with enough 0s, the block is 'mined' and becomes the the
+      hash becomes the identifier for that block
+
+Computing Hashes
+    https://en.bitcoin.it/wiki/Protocol_specification#Hashes
+    
+    - this has information on both merkle trees and the overall hash value
+
+
+SHA-256
+    https://movable-type.co.uk/scripts/sha256.html#src-code
+
+
+
+    https://en.wikipedia.org/wiki/SHA-2
+
+        The initial hash values are the 'first 32 bits of the fractional parts
+        of the square roots of the first 8 primes'
+
+        You can obtain the fractional part of the square root using modf
+            >>> frac = math.modf(math.sqrt(2))[0]
+
+        Then the first 32 bits comes from
+            >>> frac32 = frac * (1<<32)
+
+        Then convert it to an int (because it truncates), then to hex
+            >>> initial0 = hex(int(frac32))
+            >>> hex(int((math.modf(math.sqrt(2))[0] * (1<<32))))
+
+
+    Test Vectors:
+        https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/SHA256.pdf
+
+
+
+
+Block Structure
+    - Block Header
+        Version
+        previous block hash
+        merkle root
+            - special hash of all transactions in the block
+            - this ensures that the transactions can't be changed once they are
+              a part of the block
+
+            ```
+            dhash(a) = sha256(sha256(a))
+
+            d1 = dhash(a)
+            d2 = dhash(b)
+            d3 = dhash(c)
+            d4 = dhash(c)            # a, b, c are 3. that's an odd number, so
+            we take the c twice
+
+            d5 = dhash(d1 concat d2)
+            d6 = dhash(d3 concat d4)
+
+            d7 = dhash(d5 concat d6)
+
+            # d7 is the merkle root
+            ```
+
+
+        timestamp
+            - not 100% accurate, might need to be fudged a little
+
+        difficulty bits
+            - if this has a value of 0x1b0404cb
+            - you derive the target
+
+            Need to go and figure this out...
+
+            https://en.bitcoin.it/wiki/Difficulty
+
+
+            "Valid blocks must have a hash below this target"
+
+        nonce
+            - arbitrary value that is incremented on each hash attempt to
+              provide new hash value
+
+    - Transactions (right after the headers)
+        transaction count
+
+        coinbase transaction (special transaction that grants mining reward to miner)
+        transaction0
+        transaction1
+        ...
+        ...
