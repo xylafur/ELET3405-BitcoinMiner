@@ -1,7 +1,11 @@
 Mining a Block
     - collect new transactions into a block
-    - run the block through D SHA-256
-        - I think maybe you just hash the header?
+    - run the block header through D SHA-256
+
+        only the 80-byte block header is hashed for proof-of-work, so including
+        a large volume of transaction data in a block does not slow down
+        hashing with extra I/O, and adding additional transaction data only
+        requires the recalculation of the ancestor hashes in the merkle tree.
 
 
         - this is the "Proof of Work"
@@ -9,12 +13,14 @@ Mining a Block
             - bitcoin uses 'hashcash'
                 - uses has function as a building block
 
-    - if output starts with enough 0s, the block is 'mined' and becomes the the
-      hash becomes the identifier for that block
+    - if output is lower than some particular threshold value (starts with
+      enough 0s), the block is accepted by the other nodes in the network and
+      is considered to have been 'mined' and becomes the the hash becomes the
+      identifier for that block
 
 Computing Hashes
     https://en.bitcoin.it/wiki/Protocol_specification#Hashes
-    
+
     - this has information on both merkle trees and the overall hash value
 
 
@@ -98,3 +104,49 @@ Block Structure
         transaction1
         ...
         ...
+    bloc
+
+satoshis
+    - a fraction of a single bitcoin
+    1 bitcoin == 100000000 satoshis
+
+Mining:
+
+    The miner requests and is given a set of instructions through the
+    'getblocktemplate' Remote Procedure Call
+        https://en.wikipedia.org/wiki/Remote_procedure_call
+        https://bitcoin.org/en/developer-reference#getblocktemplateo
+
+
+        @ NOTE:
+            In our implementation we will assume that we already have the
+            information from this RPC.  If we were to do a full implementation,
+            this would probably be written in software, not in hardware.
+
+
+
+
+
+Transactions:
+    Each owner transfers the coin to thenext by digitally signing a hash of the
+    previous transaction and the public key of the next ownerand adding these
+    to the end of the coin
+
+
+     Each transaction spends the satoshis previously received in one or more
+     earlier transactions, so the input of one transaction is the output of a
+     previous transaction.
+
+
+Target / Difficulty:
+    https://bitcoin.org/en/glossary/nbits
+
+    New blocks will only be added to the block chain if their hash is at least
+    as challenging as a difficulty value expected by the consensus protocol.
+
+
+    Blocks are not required to include any non-coinbase transactions, but
+    miners almost always do include additional transactions in order to collect
+    their transaction fees.
+
+

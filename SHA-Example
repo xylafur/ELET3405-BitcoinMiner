@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# https://github.com/skordal/sha256
+
+# https://ghdl.readthedocs.io/en/latest/using/QuickStartGuide.html
+
+cd testbench
+ghdl -i --workdir=./ ../src/*.vhd ./*.vhd
+# Must manually program the enable pin to 1!
+ghdl -m --workdir=./ tb_sha256
+./tb_sha256
+
