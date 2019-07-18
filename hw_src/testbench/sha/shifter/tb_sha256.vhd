@@ -5,18 +5,23 @@ use ieee.numeric_std.all;
 
 use work.sha256_pkg.all;
 
-entity SHA_tb is
-end SHA_tb;
+entity SHA_Shifter_tb is
+end SHA_Shifter_tb;
 
-architecture testbench of SHA_tb is
+architecture testbench of SHA_Shifter_tb is
     signal reset : std_logic := '0';
     signal enable: std_logic := '1';
 
-    signal dm_in: hash := X"00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF";
-
-    signal shifter_out: word;
+    signal i: unsigned(0 to 5) := b"000010";
 
     signal clk: std_logic;
+
+    signal k: word := X"b5c0fbcf";
+    signal w: word := X"55adfba4";
+
+    signal dm_in: hash := X"8888888800000000111111112222222233333333444444445555555566666666";
+
+    signal dm_out: hash;
 
     constant clk_period : time := 10 ns;
 
@@ -25,10 +30,12 @@ begin
         port map(
             reset => reset,
             en => enable,
-            --i => 0,
+            i => i,
             clk => clk,
+            k => k,
+            w => w,
             dm_in => dm_in,
-            wi_out => shifter_out
+            dm_out => dm_out
         );
 
     clock: process
@@ -44,9 +51,8 @@ begin
     begin
         wait for clk_period * 2;
 
-        assert shifter_out = x"FFFFFFFF"
-
-            report "Shifter output is not correct: " & to_string(shifter_out);
+        assert dm_out = X"2d9119948888888800000000111111110b6ef772333333334444444455555555"
+            report "Shifter output is not correct: " & hash_to_string(dm_out);
 
         report "Test bench has finished!" & cr;
 

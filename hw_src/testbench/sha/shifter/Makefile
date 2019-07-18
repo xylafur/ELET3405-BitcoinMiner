@@ -1,5 +1,7 @@
-SHA_DIR=$(shell pwd)/../sha
-TEST_BENCH_NAME=sha_tb
+SHA_DIR=$(shell pwd)/../../../sha
+OBJECT_OUT=sha_shifter_tb
+TEST_BENCH_NAME=sha_shifter_tb
+TEST_BENCH_NAME=sha_shifter_tb
 WORK_OBJ=work-obj93.cf
 
 run: make
@@ -12,6 +14,6 @@ make: analyze
 	ghdl -m --workdir=./ $(TEST_BENCH_NAME)
 
 clean:
-	rm sha_tb
+	rm $(OBJECT_OUT)
 	rm *.o
 	rm $(WORK_OBJ)
