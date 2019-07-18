@@ -12,6 +12,7 @@ architecture testbench of SHA_tb is
     signal reset : std_logic := '0';
     signal enable: std_logic := '1';
 
+    signal dm_in: hash := X"00112233445566778899AABBCCDDEEFF00112233445566778899AABBCCDDEEFF";
 
     signal shifter_out: word;
 
@@ -26,6 +27,7 @@ begin
             en => enable,
             --i => 0,
             clk => clk,
+            dm_in => dm_in,
             wi_out => shifter_out
         );
 
