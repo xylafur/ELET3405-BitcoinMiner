@@ -8,7 +8,7 @@ package sha256_pkg is
     --  Types
     ---------------------------------------------------------------------------
     subtype word is std_logic_vector(0 to 31);
-	type word_vector is array(integer range <>) of word;
+    type word_vector is array(integer range <>) of word;
     subtype hash is std_logic_vector(0 to 255);
     subtype uint_64 is unsigned(0 to 63);
     subtype uint_32 is unsigned(0 to 31);
@@ -17,6 +17,22 @@ package sha256_pkg is
     ---------------------------------------------------------------------------
     --  Constant Values
     ---------------------------------------------------------------------------
+
+----------------------------------
+--array of initial hash values
+----------------------------------
+    constant H_init : word_vector(0 to 7) := (
+        x"6a09e667",
+        x"bb67ae85",
+        x"3c6ef372",
+        x"a54ff53a",
+        x"510e527f",
+        x"9b05688c",
+        x"1f83d9ab",
+        x"5be0cd19"
+    );
+
+
     constant K_constants :  word_vector(0 to 63) := (
         x"428a2f98", x"71374491", x"b5c0fbcf", x"e9b5dba5", x"3956c25b", x"59f111f1", x"923f82a4", x"ab1c5ed5",
         x"d807aa98", x"12835b01", x"243185be", x"550c7dc3", x"72be5d74", x"80deb1fe", x"9bdc06a7", x"c19bf174",
@@ -50,6 +66,7 @@ package sha256_pkg is
     function bit_to_string (a: std_logic) return string;
     function word_to_string (a: word) return string;
     function hash_to_string (a: hash) return string;
+    function unsigned_to_string ( a: unsigned) return string;
 
 end sha256_pkg;
 
@@ -180,6 +197,19 @@ package body sha256_pkg is
 
         return b;
     end function;
+
+    function unsigned_to_string ( a: unsigned) return string is
+        variable b : string (1 to a'length) := (others => NUL);
+        variable stri : integer := 1;
+    begin
+        for i in a'range loop
+            b(stri) := std_logic'image(a((i)))(2);
+            stri := stri+1;
+        end loop;
+
+        return b;
+    end function;
+
 
 
 

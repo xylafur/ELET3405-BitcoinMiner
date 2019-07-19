@@ -31,7 +31,6 @@ begin
         port map(
             reset => reset,
             en => enable,
-            i => i,
             clk => clk,
             k => k,
             w => w,

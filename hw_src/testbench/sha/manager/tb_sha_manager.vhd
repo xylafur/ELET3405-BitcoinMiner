@@ -5,14 +5,12 @@ use ieee.numeric_std.all;
 
 use work.sha256_pkg.all;
 
-entity SHA_Shifter_tb is
-end SHA_Shifter_tb;
+entity SHA_Manager_tb is
+end SHA_Manager_tb;
 
-architecture testbench of SHA_Shifter_tb is
+architecture testbench of SHA_Manager_tb is
     signal reset : std_logic := '0';
     signal enable: std_logic := '1';
-
-    signal i: unsigned(0 to 5) := b"000010";
 
     signal clk: std_logic;
 
@@ -26,16 +24,16 @@ architecture testbench of SHA_Shifter_tb is
     constant clk_period : time := 50 ns;
 
 begin
-    shifter_tb: entity work.SHA_Shifter
+    manager_tb: entity work.SHA_Manager
         port map(
-            reset => reset,
-            en => enable,
-            i => i,
             clk => clk,
-            k => k,
-            w => w,
-            dm_in => dm_in,
-            dm_out => dm_out
+            en => enable,
+            reset => reset,
+
+            k_in => k,
+            w_in => w,
+
+            hash_out => dm_out
         );
 
     clock: process
@@ -49,10 +47,11 @@ begin
 
     stimulus: process
     begin
-        wait for 3 * clk_period;
+        wait for 6 * clk_period;
 
-        assert dm_out = X"2d9119948888888800000000111111110b6ef772333333334444444455555555"
-            report "Shifter output is not correct: " & hash_to_string(dm_out);
+        assert dm_out = X"c4ed50286a09e667bb67ae853c6ef37261acaa7d510e527f9b05688c1f83d9ab"
+            report "Manager output is not correct: " & hash_to_string(dm_out);
+
 
         report "Test bench has finished!" & cr;
 

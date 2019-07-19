@@ -7,7 +7,6 @@ entity SHA_Shifter is
     port(
         reset   :  in std_logic;
         en      :  in std_logic;
-        i       :  in unsigned(0 to 5);
 
         clk     : in std_logic;
 
@@ -26,9 +25,10 @@ architecture behavior of SHA_Shifter is
 begin
     temp1_calc: process(clk)
         variable a, b, c, d, e, f, g, h : word;
+        variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
-            if temp1_valid = '0' then
+            if clk_counter = 1 then
                 a := word(dm_in(0*32 to 0*32 + 31));
                 b := word(dm_in(1*32 to 1*32 + 31));
                 c := word(dm_in(2*32 to 2*32 + 31));
@@ -44,18 +44,18 @@ begin
                                 add_words(h, k),
                                 add_words(ch(e, f, g), w)),
                             big_sigma1(e));
-                temp1_valid <= '1';
-            else
-                temp1_valid <= '0';
             end if;
+
+            clk_counter := clk_counter + 1;
         end if;
     end process temp1_calc;
 
     temp2_calc: process(clk)
         variable a, b, c, d, e, f, g, h : word;
+        variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
-            if temp2_valid = '0' then
+            if clk_counter = 1 then
                 a := word(dm_in(0*32 to 0*32 + 31));
                 b := word(dm_in(1*32 to 1*32 + 31));
                 c := word(dm_in(2*32 to 2*32 + 31));
@@ -66,23 +66,18 @@ begin
                 h := word(dm_in(7*32 to 7*32 + 31));
 
                 temp2 <= add_words(big_sigma0(a), maj(a, b, c));
-                temp2_valid <= '1';
-
-            else
-                temp2_valid <= '0';
             end if;
 
+            clk_counter := clk_counter + 1;
         end if;
     end process temp2_calc;
 
-
     compress: process(clk)
         variable a, b, c, d, e, f, g, h : word;
+        variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
-
-
-            if(temp1_valid = '1' and temp2_valid = '1') then
+            if clk_counter = 2 then
                 a := word(dm_in(0*32 to 0*32 + 31));
                 b := word(dm_in(1*32 to 1*32 + 31));
                 c := word(dm_in(2*32 to 2*32 + 31));
@@ -104,6 +99,8 @@ begin
                 dm_out <= a & b & c & d & e & f & g & h;
 
             end if;
+
+            clk_counter := clk_counter + 1;
         end if;
     end process compress;
 
