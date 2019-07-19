@@ -47,6 +47,7 @@ package sha256_pkg is
     function add_words(a: word; b: word) return word;
     function words_equal(a: word; b: word) return boolean;
 
+    function bit_to_string (a: std_logic) return string;
     function word_to_string (a: word) return string;
     function hash_to_string (a: hash) return string;
 
@@ -148,6 +149,14 @@ package body sha256_pkg is
     ---------------------------------------------------------------------------
     --  Useful in simulation for debugging
     ---------------------------------------------------------------------------
+    function bit_to_string (a: std_logic) return string is
+        variable b : string (1 to 2) := (others => NUL);
+    begin
+        b(1) := std_logic'image(a)(2);
+        return b;
+    end function;
+
+
     function word_to_string ( a: word) return string is
         variable b : string (1 to a'length) := (others => NUL);
         variable stri : integer := 1;

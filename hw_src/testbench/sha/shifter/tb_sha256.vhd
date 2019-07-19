@@ -23,7 +23,7 @@ architecture testbench of SHA_Shifter_tb is
 
     signal dm_out: hash;
 
-    constant clk_period : time := 10 ns;
+    constant clk_period : time := 50 ns;
 
 begin
     shifter_tb: entity work.SHA_Shifter
@@ -49,7 +49,7 @@ begin
 
     stimulus: process
     begin
-        wait for clk_period * 2;
+        wait for 3 * clk_period;
 
         assert dm_out = X"2d9119948888888800000000111111110b6ef772333333334444444455555555"
             report "Shifter output is not correct: " & hash_to_string(dm_out);
