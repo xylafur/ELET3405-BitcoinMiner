@@ -48,6 +48,7 @@ begin
 
     stimulus: process
         variable i                      : unsigned(0 to 5) := b"000000";
+        variable iteration_counter      : unsigned(0 to 6) := b"0000000";
 
         variable w_values               : word_vector(0 to 63) := (
             b"00110000001100010011000100110000", b"00110001001100000011000000110000",
@@ -149,6 +150,7 @@ begin
             X"43da2853c36816b511e5915d787148b550760063cb803a4fa424276fb61065f6",
             X"da21fd9b43da2853c36816b511e5915d13dd5c3150760063cb803a4fa424276f"
         );
+
     begin
         w <= w_values(to_integer(i));
 
@@ -177,11 +179,17 @@ begin
                    "should be: " & hash_to_string(outputs_each_iter(0));
 
 
-        report std_logic'image(tb1_finished);
+        assert tb1_finished = '0'
+            report "The finished value is not 0, but it should be.  It is " &
+                   std_logic'image(tb1_finished);
+
         while tb1_finished = '0' loop
+            assert iteration_counter < b"1000000"
+                report "We have done more than 64 iterations!!!";
+            iteration_counter := iteration_counter + 1;
+
             assert w = w_values(to_integer(i))
                 report "w is not right for iteration: " & unsigned_to_string(i);
-            report std_logic'image(tb1_finished);
 
 
             -- Update w for next iteration
@@ -201,6 +209,9 @@ begin
             i := i + 1;
         end loop;
         --report std_logic'image(tb1_finished);
+
+        assert iteration_counter = b"0111111"
+            report "Did not go through enough iterations!";
 
         assert dm_out = outputs_each_iter(63)
             report  "Final output is not correct!" & cr &

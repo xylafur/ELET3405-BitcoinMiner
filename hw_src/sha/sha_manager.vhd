@@ -3,7 +3,6 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.sha256_pkg.all;
 
-
 entity SHA_Manager is
     port(
         clk             : in std_logic;
@@ -27,7 +26,6 @@ architecture behavior of SHA_Manager is
     signal manager_dm       : hash := dm_initial;
     signal internal_finished: std_logic := '0';
 
-    signal start            : std_logic := '0';
     signal manager_enable   : std_logic := '0';
     signal shifter_enable   : std_logic := '0';
 
@@ -51,11 +49,12 @@ begin
                 shifter_enable = '0' then
                 -- First we set the initial value of the hash
                 -- This way it is reset for each new input
-                --report "setting manager_dm to " & hash_to_string(dm_initial);
-                --manager_dm <= dm_initial;
-                -- report "setting finished to 0";
                 finished <= '0';
-                start <= '1';
+
+                manager_enable <= '1';
+                shifter_enable <= '1';
+                processing <= '1';
+
             end if;
         end if;
 
@@ -63,35 +62,22 @@ begin
         -- probably why.  I think that this will work, I wish that we could
         -- assign signals from multiple processes....
         if internal_finished = '1' then
-            -- report "setting finished to 1";
-            start <= '0';
             finished <= '1';
-       end if;
-
-    end process manager_enabler;
-
-
-    -- mostly for sim
-    starter: process(start)
-    begin
-        if(start = '1' and start'event) then
-            report "enabling";
-            --report "dm_manager has a value of " & hash_to_string(manager_dm);
-            manager_enable <= '1';
-            shifter_enable <= '1';
-            processing <= '1';
-        end if;
-
-        if(start = '0' and start'event) then
-            report "unenabling";
-
             manager_enable <= '0';
             shifter_enable <= '0';
             processing <= '0';
-        end if;
+       end if;
+    end process manager_enabler;
 
-    end process starter;
-
+    -- We split 4 clock cycles between this module and the sha shifter module
+    --  Clock Cycle 0: MANAGER - Grab k and w and pass them into the shifter module
+    --  Clock Cycle 1: SHIFTER - Calculate the two temp values
+    --  Clock Cycle 1: SHIFTER - Use the temp values to get the hash
+    --  Clock Cycle 1: MANAGER - Move the output of the shifter to the output
+    --                           of the manager.  This is either the final
+    --                           value of will be passed into the shifter again
+    --                           If we have gone 64 iterations, we are done!
+    --                           Mark internal finished as 1
     chunk_handler: process(clk)
         -- 4 bit counter for us to sync with shifter
         variable clk_counter  : unsigned(0 to 1) := b"00";
@@ -103,8 +89,6 @@ begin
                     w_out <= w_in;
 
                 elsif clk_counter = 3 then
-                    --report "shifter dm is :" & hash_to_string(shifter_dm);
-                    --report "manager dm is :" & hash_to_string(manager_dm);
                     manager_dm <= shifter_dm;
 
                     if i = b"111111" then
@@ -121,7 +105,6 @@ begin
             -- Wait for the manager_enabler processes to realize we are
             -- finished, he does this by setting manager_enable back to 0
             if internal_finished = '1' then
-
                 if manager_enable = '0' then
                     internal_finished <= '0';
                 end if;
@@ -129,8 +112,6 @@ begin
 
             hash_out <= manager_dm;
         end if;
-
-
     end process chunk_handler;
 
     shifter: entity work.SHA_Shifter

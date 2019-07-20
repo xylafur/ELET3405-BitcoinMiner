@@ -22,10 +22,24 @@ end SHA_Shifter;
 architecture behavior of SHA_Shifter is
     signal temp1, temp2                 : word;
     signal temp1_valid, temp2_valid     : std_logic := '0';
+    signal clk_counter                  : unsigned(0 to 1) := b"00";
 begin
+    clk_counter_process: process(clk, en)
+    begin
+        -- WHen enable is toggled, we want to make sure that we are in sync
+        -- with the manager module, so we reset to 0
+        if(en = '1' and en'event) then
+            clk_counter <= b"00";
+        end if;
+
+        if(clk = '1' and clk'event and en = '1') then
+            clk_counter <= clk_counter + 1;
+        end if;
+
+    end process clk_counter_process;
+
     temp1_calc: process(clk)
         variable a, b, c, d, e, f, g, h : word;
-        variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
             if en = '1' then
@@ -46,15 +60,12 @@ begin
                                     add_words(ch(e, f, g), w)),
                                 big_sigma1(e));
                 end if;
-
-                clk_counter := clk_counter + 1;
             end if;
         end if;
     end process temp1_calc;
 
     temp2_calc: process(clk)
         variable a, b, c, d, e, f, g, h : word;
-        variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
             if en = '1' then
@@ -70,15 +81,12 @@ begin
 
                     temp2 <= add_words(big_sigma0(a), maj(a, b, c));
                 end if;
-
-                clk_counter := clk_counter + 1;
             end if;
         end if;
     end process temp2_calc;
 
     compress: process(clk)
         variable a, b, c, d, e, f, g, h : word;
-        variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
             if en = '1' then
@@ -104,8 +112,6 @@ begin
                     dm_out <= a & b & c & d & e & f & g & h;
 
                 end if;
-
-                clk_counter := clk_counter + 1;
             end if;
         end if;
     end process compress;
