@@ -28,25 +28,27 @@ begin
         variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
-            if clk_counter = 1 then
-                a := word(dm_in(0*32 to 0*32 + 31));
-                b := word(dm_in(1*32 to 1*32 + 31));
-                c := word(dm_in(2*32 to 2*32 + 31));
-                d := word(dm_in(3*32 to 3*32 + 31));
-                e := word(dm_in(4*32 to 4*32 + 31));
-                f := word(dm_in(5*32 to 5*32 + 31));
-                g := word(dm_in(6*32 to 6*32 + 31));
-                h := word(dm_in(7*32 to 7*32 + 31));
+            if en = '1' then
+                if clk_counter = 1 then
+                    a := word(dm_in(0*32 to 0*32 + 31));
+                    b := word(dm_in(1*32 to 1*32 + 31));
+                    c := word(dm_in(2*32 to 2*32 + 31));
+                    d := word(dm_in(3*32 to 3*32 + 31));
+                    e := word(dm_in(4*32 to 4*32 + 31));
+                    f := word(dm_in(5*32 to 5*32 + 31));
+                    g := word(dm_in(6*32 to 6*32 + 31));
+                    h := word(dm_in(7*32 to 7*32 + 31));
 
-                -- bottleneck right here
-                temp1 <= add_words(
-                            add_words(
-                                add_words(h, k),
-                                add_words(ch(e, f, g), w)),
-                            big_sigma1(e));
+                    -- bottleneck right here
+                    temp1 <= add_words(
+                                add_words(
+                                    add_words(h, k),
+                                    add_words(ch(e, f, g), w)),
+                                big_sigma1(e));
+                end if;
+
+                clk_counter := clk_counter + 1;
             end if;
-
-            clk_counter := clk_counter + 1;
         end if;
     end process temp1_calc;
 
@@ -55,20 +57,22 @@ begin
         variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
-            if clk_counter = 1 then
-                a := word(dm_in(0*32 to 0*32 + 31));
-                b := word(dm_in(1*32 to 1*32 + 31));
-                c := word(dm_in(2*32 to 2*32 + 31));
-                d := word(dm_in(3*32 to 3*32 + 31));
-                e := word(dm_in(4*32 to 4*32 + 31));
-                f := word(dm_in(5*32 to 5*32 + 31));
-                g := word(dm_in(6*32 to 6*32 + 31));
-                h := word(dm_in(7*32 to 7*32 + 31));
+            if en = '1' then
+                if clk_counter = 1 then
+                    a := word(dm_in(0*32 to 0*32 + 31));
+                    b := word(dm_in(1*32 to 1*32 + 31));
+                    c := word(dm_in(2*32 to 2*32 + 31));
+                    d := word(dm_in(3*32 to 3*32 + 31));
+                    e := word(dm_in(4*32 to 4*32 + 31));
+                    f := word(dm_in(5*32 to 5*32 + 31));
+                    g := word(dm_in(6*32 to 6*32 + 31));
+                    h := word(dm_in(7*32 to 7*32 + 31));
 
-                temp2 <= add_words(big_sigma0(a), maj(a, b, c));
+                    temp2 <= add_words(big_sigma0(a), maj(a, b, c));
+                end if;
+
+                clk_counter := clk_counter + 1;
             end if;
-
-            clk_counter := clk_counter + 1;
         end if;
     end process temp2_calc;
 
@@ -77,30 +81,32 @@ begin
         variable clk_counter  : unsigned(0 to 1) := b"00";
     begin
         if(clk = '1' and clk'event) then
-            if clk_counter = 2 then
-                a := word(dm_in(0*32 to 0*32 + 31));
-                b := word(dm_in(1*32 to 1*32 + 31));
-                c := word(dm_in(2*32 to 2*32 + 31));
-                d := word(dm_in(3*32 to 3*32 + 31));
-                e := word(dm_in(4*32 to 4*32 + 31));
-                f := word(dm_in(5*32 to 5*32 + 31));
-                g := word(dm_in(6*32 to 6*32 + 31));
-                h := word(dm_in(7*32 to 7*32 + 31));
+            if en = '1' then
+                if clk_counter = 2 then
+                    a := word(dm_in(0*32 to 0*32 + 31));
+                    b := word(dm_in(1*32 to 1*32 + 31));
+                    c := word(dm_in(2*32 to 2*32 + 31));
+                    d := word(dm_in(3*32 to 3*32 + 31));
+                    e := word(dm_in(4*32 to 4*32 + 31));
+                    f := word(dm_in(5*32 to 5*32 + 31));
+                    g := word(dm_in(6*32 to 6*32 + 31));
+                    h := word(dm_in(7*32 to 7*32 + 31));
 
-                h := g;
-                g := f;
-                f := e;
-                e := add_words(d, temp1);
-                d := c;
-                c := b;
-                b := a;
-                a := add_words(temp1, temp2);
+                    h := g;
+                    g := f;
+                    f := e;
+                    e := add_words(d, temp1);
+                    d := c;
+                    c := b;
+                    b := a;
+                    a := add_words(temp1, temp2);
 
-                dm_out <= a & b & c & d & e & f & g & h;
+                    dm_out <= a & b & c & d & e & f & g & h;
 
+                end if;
+
+                clk_counter := clk_counter + 1;
             end if;
-
-            clk_counter := clk_counter + 1;
         end if;
     end process compress;
 

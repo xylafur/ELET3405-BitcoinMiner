@@ -10,6 +10,7 @@ package sha256_pkg is
     subtype word is std_logic_vector(0 to 31);
     type word_vector is array(integer range <>) of word;
     subtype hash is std_logic_vector(0 to 255);
+    type hash_vector is array(integer range <>) of hash;
     subtype uint_64 is unsigned(0 to 63);
     subtype uint_32 is unsigned(0 to 31);
 
@@ -31,6 +32,10 @@ package sha256_pkg is
         x"1f83d9ab",
         x"5be0cd19"
     );
+
+    constant dm_initial: hash :=
+        H_init(0) & H_init(1) & H_init(2) & H_init(3) &
+        H_init(4) & H_init(5) & H_init(6) & H_init(7);
 
 
     constant K_constants :  word_vector(0 to 63) := (
