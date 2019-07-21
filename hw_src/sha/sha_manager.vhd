@@ -5,18 +5,18 @@ use work.sha256_pkg.all;
 
 entity SHA_Manager is
     port(
-        clk             : in std_logic;
+        clk                 : in std_logic;
 
-        en              : in std_logic;
-        reset           : in std_logic;
-        processing      : out std_logic;
+        en                  : in std_logic;
+        reset               : in std_logic;
+        processing          : out std_logic;
 
-        w_in            : in word;
+        w_in                : in word;
 
-        finished        : out std_logic := '0';
+        finished            : out std_logic := '0';
         -- Digest Messages for both manager and shifter, we need an update from
         -- the shifter
-        hash_out        : out hash
+        hash_out            : out hash
     );
 end SHA_Manager;
 

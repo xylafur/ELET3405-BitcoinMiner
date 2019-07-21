@@ -9,8 +9,14 @@ package sha256_pkg is
     ---------------------------------------------------------------------------
     subtype word is std_logic_vector(0 to 31);
     type word_vector is array(integer range <>) of word;
+
+    subtype input_msg_length is unsigned(0 to 7);
+    subtype input_msg is std_logic_vector(0 to 2**input_msg_length'length - 1);
+
+
     subtype hash is std_logic_vector(0 to 255);
     type hash_vector is array(integer range <>) of hash;
+
     subtype uint_64 is unsigned(0 to 63);
     subtype uint_32 is unsigned(0 to 31);
 
@@ -190,6 +196,20 @@ package body sha256_pkg is
 
         return b;
     end function;
+
+
+--    function integer_to_string (a: integer) return string is
+--        variable b : string (1 to a'length) := (others => NUL);
+--        variable stri : integer := 1;
+--    begin
+--        for i in a'range loop
+--            b(stri) := std_logic'image(a((i)))(2);
+--            stri := stri+1;
+--        end loop;
+--
+--        return b;
+--    end function;
+
 
     function hash_to_string ( a: hash) return string is
         variable b : string (1 to a'length) := (others => NUL);
