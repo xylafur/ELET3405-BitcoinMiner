@@ -23,6 +23,7 @@ end entity SHA_Packer;
 
 architecture behavior of SHA_Packer is
     signal bit_index            : unsigned(0 to 8) := b"000000000";
+    signal run_counter          : integer := 0;
     signal enabled              : std_logic := '0';
     signal internal_finished    : std_logic := '0';
 begin
@@ -54,11 +55,14 @@ begin
         constant word_length : integer := 32;
     begin
         if(clk = '1' and clk'event ) then
-            if bit_index = b"111111111" then
+            if run_counter = 15 then
                 internal_finished <= '1';
+                bit_index <= b"000000000";
+                run_counter <= 0;
+            else
+                bit_index <= bit_index + word_length;
+                run_counter <= run_counter + 1;
             end if;
-
-            bit_index <= bit_index + word_length;
         end if;
 
         if(enabled = '1' and enabled'event ) then

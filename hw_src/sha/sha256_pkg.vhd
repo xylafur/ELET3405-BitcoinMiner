@@ -59,6 +59,8 @@ package sha256_pkg is
     ---------------------------------------------------------------------------
     --  Function Declarations
     ---------------------------------------------------------------------------
+    function calculate_index(buf_len: integer; current_index: integer;
+                             desired_index: integer) return integer;
     function rotate_right(x: word; i: integer) return word;
     function shift_right(x: word; i: integer) return word;
 
@@ -82,6 +84,18 @@ package sha256_pkg is
 end sha256_pkg;
 
 package body sha256_pkg is
+    function calculate_index(buf_len: integer; current_index: integer;
+                             desired_index: integer) return integer is
+        variable calc_index             : integer;
+    begin
+        calc_index := current_index - desired_index;
+        if  calc_index >= 0 then
+            return calc_index;
+        else
+            return buf_len - (desired_index - current_index);
+        end if;
+    end function;
+
 
     ---------------------------------------------------------------------------
     --  Bit manipulation functions for words
