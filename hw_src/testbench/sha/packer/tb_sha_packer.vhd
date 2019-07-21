@@ -18,15 +18,6 @@ architecture testbench of SHA_Packer_tb is
     signal processing       : std_logic;
     signal word_out         : word;
 
-    signal enable2          : std_logic := '0';
-    signal msg2             : input_msg;
-    signal msg_length2      : input_msg_length;
-    signal finished2        : std_logic;
-    signal processing2      : std_logic;
-    signal word_out2        : word;
-
-
-
     constant clk_period     : time := 50 ns;
 
 begin
@@ -43,22 +34,6 @@ begin
 
             w_out => word_out
         );
-
-    packer_tb_2: entity work.SHA_Packer
-        port map(
-            msg => msg2,
-            msg_length => msg_length2,
-
-            en => enable2,
-            clk => clk,
-
-            processing => processing2,
-            finished => finished2,
-
-            w_out => word_out2
-        );
-
-
 
     clock: process
 
@@ -104,16 +79,16 @@ begin
         msg <= msg_1;
         msg_length <= msg_1_length;
 
-        msg2 <= msg_2;
-        msg_length2 <= msg_2_length;
-
         enable <= '0';
         wait for 1 ns;
         enable <= '1';
 
         assert finished = '0'
             report "Packer has marked himself as finished!";
-        assert processing = '0'
+
+        wait for 1 ns;
+
+        assert processing = '1'
             report "Packer reports he is not processing!";
 
         for ii in 0 to number_outputs - 1 loop
@@ -123,26 +98,40 @@ begin
                 report "Incorrect word!";
         end loop;
 
+        assert finished = '1'
+            report "Packer has not marked himself as finished!";
+
         report "Finished testing simple packer!";
 
-        enable2 <= '0';
-        wait for 1 ns;
-        enable2 <= '1';
+        msg <= msg_2;
+        msg_length <= msg_2_length;
 
-        assert finished2 = '0'
+        enable <= '0';
+        wait for 1 ns;
+        enable <= '1';
+        wait for 1 ns;
+
+
+        assert finished = '0'
             report "Packer has marked himself as finished!";
-            assert processing2 = '0'
+
+        assert processing = '1'
             report "Packer reports he is not processing!";
 
         for ii in 0 to number_outputs - 1 loop
             wait for clk_period;
 
-            assert word_out2 = msg_2_outputs(ii)
+            assert word_out = msg_2_outputs(ii)
                 report "Incorrect word!";
         end loop;
 
 
         report "Test bench has finished!" & cr;
+
+        assert finished = '1'
+            report "Packer has not marked himself as finished!";
+
+
 
         wait;
 
