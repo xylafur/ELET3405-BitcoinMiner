@@ -78,11 +78,11 @@ begin
         variable temp: integer;
     begin
         if(clk = '1' and clk'event ) then
-            if enabled = '1' then
+           if enabled = '1' then
                 temp := to_integer(bit_index) + word_length;
 
                 -- we are still taking bits from within the message
-                if  temp < to_integer(msg_length) then
+                if  temp <= to_integer(msg_length) then
                     w_out <= msg(to_integer(bit_index) to temp-1);
 
 

@@ -75,6 +75,20 @@ begin
         );
 
 
+        variable msg_3                  : input_msg :=
+            X"0123_4567_89AB_CDEF_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000";
+        variable msg_3_length           : input_msg_length :=
+            b"01000000";
+        variable msg_3_outputs          : word_vector (0 to number_outputs - 1) := (
+            X"01234567", X"89ABCDEF", X"80000000", X"00000000",
+            X"00000000", X"00000000", X"00000000", X"00000000",
+            X"00000000", X"00000000", X"00000000", X"00000000",
+            X"00000000", X"00000000", X"00000000", X"00000000"
+        );
+
+
+
+
     begin
         msg <= msg_1;
         msg_length <= msg_1_length;
@@ -103,6 +117,8 @@ begin
 
         report "Finished testing simple packer!";
 
+
+
         msg <= msg_2;
         msg_length <= msg_2_length;
 
@@ -125,11 +141,40 @@ begin
                 report "Incorrect word!";
         end loop;
 
+        assert finished = '1'
+            report "Packer has not marked himself as finished!";
 
-        report "Test bench has finished!" & cr;
+
+
+        msg <= msg_3;
+        msg_length <= msg_3_length;
+
+
+        enable <= '0';
+        wait for 1 ns;
+        enable <= '1';
+        wait for 1 ns;
+
+
+        assert finished = '0'
+            report "Packer has marked himself as finished!";
+
+        assert processing = '1'
+            report "Packer reports he is not processing!";
+
+        for ii in 0 to number_outputs - 1 loop
+            wait for clk_period;
+
+            assert word_out = msg_3_outputs(ii)
+                report "Incorrect word!";
+        end loop;
 
         assert finished = '1'
             report "Packer has not marked himself as finished!";
+
+
+
+        report "Test bench has finished!" & cr;
 
 
 
