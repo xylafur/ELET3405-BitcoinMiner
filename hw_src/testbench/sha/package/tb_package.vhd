@@ -28,6 +28,13 @@ begin
         assert words_equal(add_words(X"ffffffff", X"ffffffff"), X"fffffffe")
             report "Can't add words!";
 
+        assert words_equal(add_words(X"ffffffff", X"00000000"), X"ffffffff")
+            report "Can't add words!";
+
+        assert words_equal(add_words(X"123488b8", X"00000000"), X"123488b8")
+            report "Can't add words!";
+
+
         assert words_equal(add_words(X"2ffdff21", X"ccdcd1e3"), X"fcdad104")
             report "Python generated add is incorrect!" &
                    "is  : " & word_to_string(add_words(X"2ffdff21", X"ccdcd1e3")) &
@@ -252,6 +259,12 @@ begin
         ----------------------------------------------------------------------
         assert words_equal(little_sigma0(X"ff00aa55"), X"9e8b6bde")
             report "little sigma 0 calculation not correct!";
+
+        assert words_equal(little_sigma0(X"77777777"), X"3ddddddd")
+            report "Python generated sigma0 is incorrect!" &
+                   "is  : " & word_to_string(little_sigma0(X"77777777")) &
+                   "shdb: " & word_to_string(X"3ddddddd");
+
 
         assert words_equal(little_sigma0(X"b1bff1f8"), X"1b2aadb3")
             report "Python generated sigma0 is incorrect!" &

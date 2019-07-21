@@ -116,6 +116,11 @@ def sha256(message):
         #     Extend the first 16 words into the remaining 48 words w[16..63]
         #     of the message schedule array:
         for i in range(16, 64):
+            w[i - 2] = w[i - 2].rjust(32, '0')
+            w[i - 7] = w[i - 7].rjust(32, '0')
+            w[i - 15] = w[i - 15].rjust(32, '0')
+            w[i - 16] = w[i - 16].rjust(32, '0')
+
             s0 = right_rotate_shift_xor_3(w[i - 15], 7,
                                           w[i - 15], 18,
                                           w[i - 15], 3)
@@ -163,6 +168,7 @@ def sha256(message):
             b = a
             a = mod32_add_str(temp1, temp2)
 
+            #print(hex(int(a + b + c + d + e + f + g + h, 2))[2:].rjust(64, '0'))
 
 
         h0 = mod32_add_str(h0, a)
@@ -180,15 +186,18 @@ def dhash(message):
     return sha256(sha256(message))
 
 def main():
-    inp = parse_input("hello\n")
-    print(inp)
+    #raw_inp = "hello\n"
+    raw_inp = "3(X*{Dg"
+    print("Input as string: ", raw_inp)
+    inp = parse_input(raw_inp)
+    print("Input in binary: ", inp)
     sha = sha256(inp)
-    print(sha)
-    print(hex(int(sha, 2)))
+    print("Calculated sha in binary: ", sha)
+    print("Calculated sha in hex: ", hex(int(sha, 2)))
 
     from hashlib import sha256 as realsha256
     output = realsha256(inp.encode('utf-8'))
-    print(output.hexdigest())
+    print("Sha from native python sha lib: ", output.hexdigest())
 
 
 if __name__ == '__main__':

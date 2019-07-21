@@ -14,7 +14,11 @@ inputs = [
             be long enough such that we will have multiple blocks and can
             validate that portion of the algorithm.  Blocks are 512 bits, so
             this should suffice
-        """
+        """,
+        "1234567890afskdfjhasdvz asdflakjsdfasdf\f \a\b\assdfoasidr\4\1",
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+
         ]
 
 for inp in inputs:
@@ -26,5 +30,26 @@ for inp in inputs:
 
     if mine != real:
         print("SHA implementation is incorrect for input {}".format(inp))
+
+import random
+import string
+num_tests = 5000
+cor = 0
+for i in range(num_tests):
+    num_characters = random.randint(5, 9000)
+    my_string = ''
+    for _ in range(num_characters):
+        my_string+= random.choice(string.printable)
+
+    mine = hex(int(my_sha(my_string), 2))[2:].rjust(64, '0')
+    real = real_sha(my_string.encode('utf-8')).hexdigest()
+
+    if mine != real:
+        print("SHA implementation is incorrect for input '{}'".format(my_string))
+        print("Is   : {}".format(mine))
+        print("Shdb : {}".format(real))
+    else:
+        cor += 1
+print("{} out of {} correct".format(cor, num_tests))
 
 

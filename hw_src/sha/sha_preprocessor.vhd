@@ -91,9 +91,6 @@ begin
                     word_buffer(buffer_index) <= word_in;
 
                 else
-                    --report integer'image(buffer_length);
-                    --report integer'image(buffer_index);
-
                     w2 := word_buffer(calculate_index(buffer_length, buffer_index,  2));
                     w7 := word_buffer(calculate_index(buffer_length, buffer_index,  7));
                     w15 := word_buffer(calculate_index(buffer_length, buffer_index,  15));
@@ -101,16 +98,6 @@ begin
 
                     s0 := little_sigma0(w15);
                     s1 := little_sigma1(w2);
-
-
-                    --report "PRINTING OUT WORDS";
-                    --report word_to_string(w2);
-                    --report word_to_string(w7);
-                    --report word_to_string(w15);
-                    --report word_to_string(w16);
-                    --report word_to_string(s0);
-                    --report word_to_string(s1);
-                    --report cr & cr;
 
 
                     val := add_words(add_words(s0, s1), add_words(w16, w7));

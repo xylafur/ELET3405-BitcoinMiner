@@ -45,14 +45,16 @@ def sha_shifter(k, w, dm_in):
 
 
 w = [
+
+        bin(int("ffffffff", 16))[2:], bin(int("eeeeeeee", 16))[2:],
+        bin(int("dddddddd", 16))[2:], bin(int("cccccccc", 16))[2:],
+        bin(int("bbbbbbbb", 16))[2:], bin(int("aaaaaaaa", 16))[2:],
         bin(int("99999999", 16))[2:], bin(int("88888888", 16))[2:],
+
         bin(int("77777777", 16))[2:], bin(int("66666666", 16))[2:],
         bin(int("55555555", 16))[2:], bin(int("44444444", 16))[2:],
         bin(int("33333333", 16))[2:], bin(int("22222222", 16))[2:],
-        bin(int("00000000", 16))[2:], bin(int("00000000", 16))[2:],
-        bin(int("00000000", 16))[2:], bin(int("00000000", 16))[2:],
-        bin(int("00000000", 16))[2:], bin(int("00000000", 16))[2:],
-        bin(int("00000000", 16))[2:], bin(int("00000000", 16))[2:],
+        bin(int("ffffffff", 16))[2:], bin(int("ffffffff", 16))[2:],
 
         bin(int("00000000", 16))[2:], bin(int("00000000", 16))[2:],
         bin(int("00000000", 16))[2:], bin(int("00000000", 16))[2:],
@@ -84,6 +86,11 @@ for i in range(0, 16):
     print(hex(int(w[i], 2))[2:].rjust(8, '0'))
 
 for i in range(16, 64):
+    w[i - 2] = w[i - 2].rjust(32, '0')
+    w[i - 7] = w[i - 7].rjust(32, '0')
+    w[i - 15] = w[i - 15].rjust(32, '0')
+    w[i - 16] = w[i - 16].rjust(32, '0')
+
     s0 = right_rotate_shift_xor_3(w[i - 15], 7,
                                   w[i - 15], 18,
                                   w[i - 15], 3)
@@ -91,6 +98,7 @@ for i in range(16, 64):
     s1 = right_rotate_shift_xor_3(w[i - 2], 17,
                                   w[i - 2], 19,
                                   w[i - 2], 10)
+
 
     val = add_n_32_bit_strings_modo([w[i - 16], s0, w[i - 7], s1])
     w[i] = val
