@@ -1,7 +1,7 @@
 SHA_DIR=$(shell pwd)/../../../sha
-OBJECT_OUT=sha_manager_tb
-TEST_BENCH_NAME=sha_manager_tb
-TEST_BENCH_NAME=sha_manager_tb
+OBJECT_OUT=sha_shifter_tb
+TEST_BENCH_NAME=$(OBJECT_OUT)
+TEST_BENCH_NAME=$(OBJECT_OUT)
 WORK_OBJ=work-obj93.cf
 
 run: make
