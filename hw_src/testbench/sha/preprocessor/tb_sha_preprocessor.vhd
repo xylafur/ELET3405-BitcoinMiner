@@ -15,6 +15,8 @@ architecture testbench of SHA_Preprocessor_tb is
     signal processing       : std_logic;
     signal finished         : std_logic;
 
+    signal output_valid     : std_logic := '0';
+
     signal word_in          : word;
     signal word_out         : word;
 
@@ -27,6 +29,7 @@ begin
 
             processing => processing,
             finished => finished,
+            output_valid => output_valid,
 
             word_in => word_in,
             word_out => word_out
@@ -692,11 +695,7 @@ begin
             report "preprocessor reports he is not done processing!";
 
 
-
-
         report "Test bench has finished!" & cr;
-
-
 
         wait;
 

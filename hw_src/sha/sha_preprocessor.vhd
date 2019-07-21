@@ -19,6 +19,8 @@ entity SHA_Preprocessor is
         processing  : out std_logic := '0';
         finished : out std_logic := '0';
 
+        output_valid : out std_logic := '0';
+
         word_in     : in word;
         word_out    : out word
     );
@@ -107,8 +109,13 @@ begin
                 end if;
 
                 if word_counter < 63 then
+                    if word_counter = 0 then
+                        output_valid <= '1';
+                    end if;
+
                     word_counter := word_counter + 1;
                 else
+                    output_valid <= '1';
                     word_counter := 0;
                 end if;
 
