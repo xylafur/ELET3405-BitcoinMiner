@@ -87,6 +87,7 @@ begin
 
     compress: process(clk)
         variable a, b, c, d, e, f, g, h : word;
+        variable calc_hash: hash;
     begin
         if(clk = '1' and clk'event) then
             if en = '1' then
@@ -109,7 +110,10 @@ begin
                     b := a;
                     a := add_words(temp1, temp2);
 
-                    dm_out <= a & b & c & d & e & f & g & h;
+                    calc_hash := a & b & c & d & e & f & g & h;
+                    --report "Shifter Hash: " & hash_to_string(calc_hash);
+
+                    dm_out <= calc_hash;
 
                 end if;
             end if;

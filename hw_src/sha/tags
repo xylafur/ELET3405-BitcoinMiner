@@ -1,0 +1,47 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+-workdir	Makefile	/^	ghdl -m --workdir=.\/ $(PROJECT)$/;"	m
+H_init	sha256_pkg.vhd	/^    constant H_init : word_vector(0 to 7) := ($/;"	c
+K_constants	sha256_pkg.vhd	/^    constant K_constants :  word_vector(0 to 63) := ($/;"	c
+PROJECT	Makefile	/^PROJECT=sha256$/;"	m
+SHA256	sha256.vhd	/^entity SHA256 is$/;"	e
+SHA_DIR	Makefile	/^SHA_DIR=.\/$/;"	m
+SHA_Manager	sha_manager.vhd	/^entity SHA_Manager is$/;"	e
+SHA_Packer	sha_packer.vhd	/^entity SHA_Packer is$/;"	e
+SHA_Preprocessor	sha_preprocessor.vhd	/^entity SHA_Preprocessor is$/;"	e
+SHA_Shifter	sha_shifter.vhd	/^entity SHA_Shifter is$/;"	e
+WORK_OBJ	Makefile	/^WORK_OBJ=work-obj93.cf$/;"	m
+add_words	sha256_pkg.vhd	/^    function add_words(a: word; b: word) return word is$/;"	f
+big_sigma0	sha256_pkg.vhd	/^    function big_sigma0(x: word) return word is$/;"	f
+big_sigma1	sha256_pkg.vhd	/^    function big_sigma1(x: word) return word is$/;"	f
+bit_to_string	sha256_pkg.vhd	/^    function bit_to_string (a: std_logic) return string is$/;"	f
+buffer_length	sha_preprocessor.vhd	/^    constant buffer_length      : integer := 17;$/;"	c
+calculate_index	sha256_pkg.vhd	/^    function calculate_index(buf_len: integer; current_index: integer;$/;"	f
+ch	sha256_pkg.vhd	/^    function ch(e: word; f: word; g: word) return word is$/;"	f
+dm_initial	sha256_pkg.vhd	/^    constant dm_initial: hash :=$/;"	c
+hash	sha256_pkg.vhd	/^    subtype hash is std_logic_vector(0 to 255);$/;"	T
+hash_to_string	sha256_pkg.vhd	/^    function hash_to_string ( a: hash) return string is$/;"	f
+hash_vector	sha256_pkg.vhd	/^    type hash_vector is array(integer range <>) of hash;$/;"	t
+input_msg	sha256_pkg.vhd	/^    subtype input_msg is std_logic_vector(0 to 2**input_msg_length'length - 1);$/;"	T
+input_msg_length	sha256_pkg.vhd	/^    subtype input_msg_length is unsigned(0 to 7);$/;"	T
+little_sigma0	sha256_pkg.vhd	/^    function little_sigma0(x: word) return word is$/;"	f
+little_sigma1	sha256_pkg.vhd	/^    function little_sigma1(x: word) return word is$/;"	f
+maj	sha256_pkg.vhd	/^    function maj(a: word; b: word; c: word) return word is$/;"	f
+num_words	sha_preprocessor.vhd	/^    constant num_words          : integer := 64;$/;"	c
+rotate_right	sha256_pkg.vhd	/^    function rotate_right(x: word; i: integer) return word is$/;"	f
+sha256_pkg	sha256_pkg.vhd	/^package body sha256_pkg is$/;"	P
+sha256_pkg	sha256_pkg.vhd	/^package sha256_pkg is$/;"	P
+shift_right	sha256_pkg.vhd	/^    function shift_right(x: word; i: integer) return word is$/;"	f
+sixty_four_counter	sha_preprocessor.vhd	/^        subtype sixty_four_counter is integer range 0 to 63;$/;"	T
+uint_32	sha256_pkg.vhd	/^    subtype uint_32 is unsigned(0 to 31);$/;"	T
+uint_64	sha256_pkg.vhd	/^    subtype uint_64 is unsigned(0 to 63);$/;"	T
+unsigned_to_string	sha256_pkg.vhd	/^    function unsigned_to_string ( a: unsigned) return string is$/;"	f
+word	sha256_pkg.vhd	/^    subtype word is std_logic_vector(0 to 31);$/;"	T
+word_length	sha_packer.vhd	/^        constant word_length : integer := 32;$/;"	c
+word_to_string	sha256_pkg.vhd	/^    function word_to_string ( a: word) return string is$/;"	f
+word_vector	sha256_pkg.vhd	/^    type word_vector is array(integer range <>) of word;$/;"	t
+words_equal	sha256_pkg.vhd	/^    function words_equal(a: word; b: word) return boolean is$/;"	f

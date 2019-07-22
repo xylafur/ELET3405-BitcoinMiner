@@ -68,6 +68,7 @@ begin
 
         if(clk = '1' and clk'event ) then
             if enabled = '1' then
+
                 if current_word = num_words - 1 then
                     current_word <= 0;
                     internal_finished <= '1';
@@ -105,7 +106,9 @@ begin
                     val := add_words(add_words(s0, s1), add_words(w16, w7));
 
                     word_buffer(buffer_index) <= val;
+
                     word_out <= val;
+
                 end if;
 
                 if word_counter < 63 then

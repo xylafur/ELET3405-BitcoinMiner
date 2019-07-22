@@ -16,6 +16,7 @@ architecture testbench of SHA_Packer_tb is
     signal msg_length       : input_msg_length;
     signal finished         : std_logic;
     signal processing       : std_logic;
+    signal output_valid     : std_logic;
     signal word_out         : word;
 
     constant clk_period     : time := 50 ns;
@@ -30,7 +31,9 @@ begin
             clk => clk,
 
             processing => processing,
+            valid => output_valid,
             finished => finished,
+
 
             w_out => word_out
         );
@@ -52,38 +55,38 @@ begin
         variable msg_1                  : input_msg :=
             X"FFFF_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000";
         variable msg_1_length           : input_msg_length :=
-            b"00010000";
+            b"0001_0000";
 
         variable msg_1_outputs          : word_vector (0 to number_outputs - 1) := (
             X"FFFF8000", X"00000000", X"00000000", X"00000000",
             X"00000000", X"00000000", X"00000000", X"00000000",
             X"00000000", X"00000000", X"00000000", X"00000000",
-            X"00000000", X"00000000", X"00000000", X"00000000"
+            X"00000000", X"00000000", X"00000000", X"00000010"
         );
 
 
         variable msg_2                  : input_msg :=
             X"0123_4567_89AB_CDEF_8000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000";
         variable msg_2_length           : input_msg_length :=
-            b"01000001";
+            b"0100_0001";
 
         variable msg_2_outputs          : word_vector (0 to number_outputs - 1) := (
             X"01234567", X"89ABCDEF", X"C0000000", X"00000000",
             X"00000000", X"00000000", X"00000000", X"00000000",
             X"00000000", X"00000000", X"00000000", X"00000000",
-            X"00000000", X"00000000", X"00000000", X"00000000"
+            X"00000000", X"00000000", X"00000000", X"00000041"
         );
 
 
         variable msg_3                  : input_msg :=
             X"0123_4567_89AB_CDEF_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000_0000";
         variable msg_3_length           : input_msg_length :=
-            b"01000000";
+            b"0100_0000";
         variable msg_3_outputs          : word_vector (0 to number_outputs - 1) := (
             X"01234567", X"89ABCDEF", X"80000000", X"00000000",
             X"00000000", X"00000000", X"00000000", X"00000000",
             X"00000000", X"00000000", X"00000000", X"00000000",
-            X"00000000", X"00000000", X"00000000", X"00000000"
+            X"00000000", X"00000000", X"00000000", X"00000040"
         );
 
 
@@ -109,7 +112,10 @@ begin
             wait for clk_period;
 
             assert word_out = msg_1_outputs(ii)
-                report "Incorrect word!";
+                report "Incorrect word!" &
+                       " is : " & word_to_string(word_out) &
+                       " sdb: " & word_to_string(msg_1_outputs(ii));
+
         end loop;
 
         assert finished = '1'

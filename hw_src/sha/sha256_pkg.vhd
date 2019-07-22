@@ -248,9 +248,5 @@ package body sha256_pkg is
 
         return b;
     end function;
-
-
-
-
 end package body sha256_pkg;
 

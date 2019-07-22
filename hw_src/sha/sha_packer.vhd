@@ -14,6 +14,7 @@ entity SHA_Packer is
 
 
         processing  : out std_logic := '0';
+        valid       : out std_logic := '0';
         finished    : out std_logic := '0';
         w_out       : out word
 
@@ -84,6 +85,14 @@ begin
                 -- we are still taking bits from within the message
                 if  temp <= to_integer(msg_length) then
                     w_out <= msg(to_integer(bit_index) to temp-1);
+                    valid <= '1';
+
+                -- We are on the final word, we need to output the length of
+                -- the message padded with 0's on the left!
+                elsif bit_index + word_length = b"000000000" then
+                    -- this temp represents this number of zeros to pad with
+                    temp := word_length - msg_length'length;
+                    w_out <= (0 to temp - 1 => '0') & std_logic_vector(msg_length);
 
 
                 -- we have finished taking bits from the message, we are beyond
@@ -103,6 +112,8 @@ begin
                             '1' & (temp + 1 to word_length - 1 => '0');
 
                 end if;
+            else
+                valid <= '0';
             end if;
         end if;
     end process pack;

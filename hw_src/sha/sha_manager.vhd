@@ -9,7 +9,8 @@ entity SHA_Manager is
 
         en                  : in std_logic;
         reset               : in std_logic;
-        processing          : out std_logic;
+
+        processing          : out std_logic := '0';
 
         w_in                : in word;
 
@@ -50,10 +51,10 @@ begin
                 -- First we set the initial value of the hash
                 -- This way it is reset for each new input
                 finished <= '0';
+                processing <= '1';
 
                 manager_enable <= '1';
                 shifter_enable <= '1';
-                processing <= '1';
 
             end if;
         end if;
@@ -62,6 +63,7 @@ begin
         -- probably why.  I think that this will work, I wish that we could
         -- assign signals from multiple processes....
         if internal_finished = '1' then
+            hash_out <= manager_dm;
             finished <= '1';
             manager_enable <= '0';
             shifter_enable <= '0';
@@ -84,11 +86,15 @@ begin
     begin
         if(clk = '1' and clk'event)then
             if manager_enable = '1'  and internal_finished = '0' then
+
+
                 if clk_counter = 0 then
                     k_out <= k_in;
                     w_out <= w_in;
 
                 elsif clk_counter = 3 then
+
+
                     manager_dm <= shifter_dm;
 
                     if i = b"111111" then
@@ -110,7 +116,6 @@ begin
                 end if;
             end if;
 
-            hash_out <= manager_dm;
         end if;
     end process chunk_handler;
 
